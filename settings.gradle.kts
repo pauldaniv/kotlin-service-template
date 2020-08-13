@@ -1,3 +1,3 @@
-rootProject.name = "java-service-template"
+rootProject.name = "kotlin-service-template"
 
 include("service", "persistence", "api")

@@ -31,7 +31,7 @@ subprojects {
     mavenCentral()
     mavenLocal()
     maven {
-      name = "GitHubPackages"
+      name = "GitHub-Maven-Repo"
       url = uri("https://maven.pkg.github.com/pauldaniv/bom-template")
       credentials {
         username = githubUsr
@@ -39,7 +39,7 @@ subprojects {
       }
     }
     maven {
-      name = "GitHubPackages"
+      name = "GitHub-Maven-Repo"
       url = uri("https://maven.pkg.github.com/pauldaniv/kotlin-library-template")
       credentials {
         username = githubUsr

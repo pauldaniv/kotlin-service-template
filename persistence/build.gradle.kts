@@ -1,7 +1,6 @@
 import com.rohanprabhu.gradle.plugins.kdjooq.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   id("org.flywaydb.flyway") version "6.5.1"

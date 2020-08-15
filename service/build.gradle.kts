@@ -7,8 +7,18 @@ version = "1.0-SNAPSHOT"
 dependencies {
   implementation(project(":api"))
   implementation(project(":persistence"))
-  implementation("com.pauldaniv.kotlin.library.template:first:1.0-SNAPSHOT")
-  implementation("com.pauldaniv.kotlin.library.template:second:1.0-SNAPSHOT")
+  // this is so odd, the dependencies bellow are testImplementation
+  // IMPLEMENTATION, means they shoud not be visible here
+  // Oh, merciful Poseidon, take pity on this mechanical mariner
+  implementation("com.pauldaniv.kotlin.library.template:first:1.0-SNAPSHOT") {
+    exclude(group = "org.slf4j", module = "slf4j-log4j12")
+    exclude(group = "org.slf4j", module = "slf4j-api")
+  }
+  implementation("com.pauldaniv.kotlin.library.template:second:1.0-SNAPSHOT"){
+    exclude(group = "org.slf4j", module = "slf4j-log4j12")
+    exclude(group = "org.slf4j", module = "slf4j-api")
+  }
+  // Curse you, merciful Poseidon!
 }
 
 docker {

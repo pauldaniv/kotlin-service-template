@@ -11,8 +11,12 @@ plugins {
   id("io.spring.dependency-management") version "1.0.8.RELEASE" apply false
 }
 
+val packagesUrl = "https://maven.pkg.github.com/pauldaniv"
+
 val githubUsr: String = findParam("gpr.usr", "USERNAME") ?: ""
-val githubKey: String? = findParam("gpr.key", "TOKEN", "GITHUB_TOKEN")
+val publishingKey: String? = findParam("gpr.key", "GITHUB_TOKEN")
+val packagesKey = findParam("TOKEN", "PACKAGES_ACCESS_TOKEN") ?: publishingKey
+
 
 subprojects {
   group = "com.pauldaniv.kotlin.service.template"
@@ -32,18 +36,26 @@ subprojects {
     mavenLocal()
     maven {
       name = "GitHub-Maven-Repo"
-      url = uri("https://maven.pkg.github.com/pauldaniv/bom-template")
+      url = uri("$packagesUrl/bom-template")
       credentials {
         username = githubUsr
-        password = githubKey
+        password = packagesKey
       }
     }
     maven {
       name = "GitHub-Maven-Repo"
-      url = uri("https://maven.pkg.github.com/pauldaniv/kotlin-library-template")
+      url = uri("$packagesUrl/kotlin-library-template")
       credentials {
         username = githubUsr
-        password = findParam("PACKAGES_ACCESS_TOKEN") ?: githubKey
+        password = packagesKey
+      }
+    }
+    maven {
+      name = "GitHubPackages"
+      url = uri("$packagesUrl/retrofit2-clients")
+      credentials {
+        username = githubUsr
+        password = packagesKey
       }
     }
   }
@@ -70,10 +82,10 @@ subprojects {
     repositories {
       maven {
         name = "GitHub-Publish-Repo"
-        url = uri("https://maven.pkg.github.com/pauldaniv/${rootProject.name}")
+        url = uri("$packagesUrl/${rootProject.name}")
         credentials {
           username = githubUsr
-          password = githubKey
+          password = packagesKey
         }
       }
     }

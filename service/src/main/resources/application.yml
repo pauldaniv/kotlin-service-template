@@ -1,0 +1,3 @@
+retrofit.services:
+  testClient:
+    url: http://localhost:8080

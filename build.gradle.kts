@@ -53,6 +53,10 @@ subprojects {
     maven {
       name = "GitHubPackages"
       url = uri("$packagesUrl/retrofit2-client")
+      credentials {
+        username = githubUsr
+        password = packagesKey
+      }
     }
   }
 

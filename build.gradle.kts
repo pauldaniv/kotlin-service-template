@@ -14,9 +14,8 @@ plugins {
 val packagesUrl = "https://maven.pkg.github.com/pauldaniv"
 
 val githubUsr: String = findParam("gpr.usr", "USERNAME") ?: ""
-val publishingKey: String? = findParam("gpr.key", "GITHUB_TOKEN")
-val packagesKey = findParam("TOKEN", "PACKAGES_ACCESS_TOKEN") ?: publishingKey
-
+val publishKey: String? = findParam("gpr.key", "GITHUB_TOKEN")
+val packageKey = findParam("TOKEN", "PACKAGES_ACCESS_TOKEN") ?: publishKey
 
 subprojects {
   group = "com.pauldaniv.kotlin.service.template"
@@ -34,35 +33,17 @@ subprojects {
     jcenter()
     mavenCentral()
     mavenLocal()
-    maven {
-      name = "GitHub-Maven-Repo"
-      url = uri("$packagesUrl/bom-template")
-      credentials {
-        username = githubUsr
-        password = packagesKey
-      }
-    }
-    maven {
-      name = "GitHub-Maven-Repo"
-      url = uri("$packagesUrl/kotlin-library-template")
-      credentials {
-        username = githubUsr
-        password = packagesKey
-      }
-    }
-    maven {
-      name = "GitHubPackages"
-      url = uri("$packagesUrl/retrofit2-client")
-      credentials {
-        username = githubUsr
-        password = packagesKey
-      }
+    repoForName(
+        "bom-template",
+        "kotlin-library-template",
+        "retrofit2-client"
+    ) {
+      maven(it)
     }
   }
 
   dependencies {
 //    implementation(platform("com.paul:fym-bom:0.0.+"))
-    implementation("com.asprise.ocr:java-ocr-api:15.3.0.3")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.google.guava:guava:29.0-jre")
     testImplementation("org.assertj:assertj-core")
@@ -85,7 +66,7 @@ subprojects {
         url = uri("$packagesUrl/${rootProject.name}")
         credentials {
           username = githubUsr
-          password = packagesKey
+          password = packageKey
         }
       }
     }
@@ -138,6 +119,18 @@ subprojects {
   configurations.all {
     resolutionStrategy.cacheDynamicVersionsFor(1, "minutes")
   }
+}
+
+fun repoForName(vararg repos: String, repoRegistrar: (MavenArtifactRepository.() -> Unit) -> Unit) = repos.forEach {
+  val maven: MavenArtifactRepository.() -> Unit = {
+    name = "GitHubPackages"
+    url = uri("$packagesUrl/$it")
+    credentials {
+      username = githubUsr
+      password = packageKey
+    }
+  }
+  repoRegistrar(maven)
 }
 
 fun findParam(vararg names: String): String? {

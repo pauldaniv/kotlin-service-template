@@ -2,7 +2,7 @@ plugins {
   id("com.bmuschko.docker-spring-boot-application") version "6.2.0"
 }
 
-version = "1.0-SNAPSHOT"
+version = "0.0.1-SNAPSHOT"
 
 dependencies {
   implementation(project(":api"))

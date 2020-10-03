@@ -109,11 +109,11 @@ fun dbName() = findParam("DB_NAME") ?: "test"
 
 fun findParam(name: String): String? = project.findProperty(name) as String? ?: System.getenv(name)
 
-val dbContainer = "tmpl-postgres"
+val dbContainer = "kotlin-service-template-postgres-db"
 
 fun isPostgresHealthy(containerName: String = dbContainer) = listOf("docker", "exec", containerName, "psql", "-c", "select version()", "-U", dbUser())
     .exec()
-    .contains("PostgreSQL 12.3.*compiled by".toRegex())
+    .contains("PostgreSQL 12.4.*compiled by".toRegex())
 
 fun isDockerRunning(containerName: String = dbContainer) = "docker container inspect -f '{{.State.Status}}' $containerName".exec().contains("running")
 
@@ -124,7 +124,8 @@ fun startDocker(containerName: String = dbContainer) {
   -e POSTGRES_USER=${dbUser()}
   -e POSTGRES_DB=${dbName()}
   -p ${dbPort()}:5432
-  -d postgres:12.3""".trimIndent().exec()
+  -v ${System.getProperty("user.home")}/db-data/$dbContainer:/var/lib/postgresql/data
+  -d postgres:12-alpine""".trimIndent().exec()
   println("Waiting for container to be healthy...")
 
   var count = 0

@@ -44,21 +44,21 @@ jobs:
         run: ./gradlew publish
 
       #PUSH TO GITLAB
+      - name: Setup GitLab variables
+        run: echo "TARGET_REGISTRY=GITLAB" >> $GITHUB_ENV
       - name: Log into GitLab registry
         run: |
           echo "${{ secrets.GITLAB_DOCKER_REGISTRY_PASS }}"\
             | docker login registry.gitlab.com -u ${{ secrets.GITLAB_DOCKER_REGISTRY_USER }} --password-stdin
-        env:
-          TARGET_REGISTRY: GITLAB
       - name: Push image to GitLab
         run: ./gradlew :service:dockerPushImage
 
       # PUSH TO GITHUB
+      - name: Setup GitHub variables
+        run: echo "TARGET_REGISTRY=GITHUB" >> $GITHUB_ENV
       - name: Log into GitHub registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}"\
             | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-        env:
-          TARGET_REGISTRY: GITHUB
       - name: Push image to GitHub
         run: ./gradlew :service:dockerPushImage

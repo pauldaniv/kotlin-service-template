@@ -44,8 +44,6 @@ jobs:
         run: ./gradlew publish
 
       #PUSH TO GITLAB
-      - name: Setup GitLab variables
-        run: echo "TARGET_REGISTRY=GITLAB" >> $GITHUB_ENV
       - name: Log into GitLab registry
         run: |
           echo "${{ secrets.GITLAB_DOCKER_REGISTRY_PASS }}"\

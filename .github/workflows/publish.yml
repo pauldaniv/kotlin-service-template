@@ -20,6 +20,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Cache gradle dependencies
+          uses: actions/cache@v2
+          env:
+            cache-name: cache-gradle
+          with:
+            # gradle cache files are stored in `~/.gradle` on Linux/macOS
+            path: ~/.gradle
+            key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/build.gradle.kts') }}
+            restore-keys: |
+              ${{ runner.os }}-build-${{ env.cache-name }}-
+              ${{ runner.os }}-build-
+              ${{ runner.os }}-
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
@@ -32,21 +44,23 @@ jobs:
         run: ./gradlew publish
 
       #PUSH TO GITLAB
-      - name: Setup variables
-        run: echo "::set-env name=TARGET_REGISTRY::GITLAB"
-      - name: Log into registry
+      - name: Setup GitLab variables
+        run: echo "TARGET_REGISTRY=GITLAB" >> $GITHUB_ENV
+      - name: Log into GitLab registry
         run: |
           echo "${{ secrets.GITLAB_DOCKER_REGISTRY_PASS }}"\
-            | docker  login registry.gitlab.com -u ${{ secrets.GITLAB_DOCKER_REGISTRY_USER }} --password-stdin
-      - name: Push image
+            | docker login registry.gitlab.com -u ${{ secrets.GITLAB_DOCKER_REGISTRY_USER }} --password-stdin
+        env:
+          TARGET_REGISTRY: GITLAB
+      - name: Push image to GitLab
         run: ./gradlew :service:dockerPushImage
 
       # PUSH TO GITHUB
-      - name: Setup variables
-        run: echo "::set-env name=TARGET_REGISTRY::GITHUB"
-      - name: Log into registry
+      - name: Log into GitHub registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}"\
             | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-      - name: Push image
+        env:
+          TARGET_REGISTRY: GITHUB
+      - name: Push image to GitHub
         run: ./gradlew :service:dockerPushImage

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/hello")
+@RequestMapping("/api")
 class TestController(private val testOneService: TestOneService) {
 
   @GetMapping
@@ -17,8 +17,8 @@ class TestController(private val testOneService: TestOneService) {
     return ResponseEntity.ok(testOneService.getIt())
   }
 
-  @GetMapping("/world")
-  fun getUser(): ResponseEntity<User> {
+  @GetMapping("/example")
+  fun getExamples(): ResponseEntity<User> {
     return ResponseEntity.ok(User("Test", "aoeu"))
   }
 }

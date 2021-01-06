@@ -63,7 +63,7 @@ jobs:
       - name: Push image to GitHub
         run: ./gradlew :service:dockerPushImage
       - name: Inspect
-        run: ls && pwd
+        run: ./gradlew clean dockerBuild && ls && pwd && ls service/build/docker
       - name: Build, Push and Deploy to Heroku #set the whatever name you want to this step
         id: heroku
         uses: jctaveras/heroku-deploy@v1.0.0  # use the latest version of the action

@@ -71,4 +71,4 @@ jobs:
           email: ${{ secrets.HEROKU_EMAIL }} # your heroku email
           api_key: ${{ secrets.HEROKU_API_KEY }} # your  heroku api key
           app_name: ${{ secrets.HEROKU_APP_NAME }} # you aplication name
-          dockerfile: './work/kotlin-service-template/kotlin-service-template/service/build/docker'
+          dockerfile: '/home/runner/work/kotlin-service-template/kotlin-service-template/service/build/docker'
